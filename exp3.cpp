@@ -64,10 +64,34 @@ void calculate_round_robin(vector<double> burst)
 
 }
 
+
+void swap(double *xp, double *yp)
+{
+    double temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
+ 
+// A function to implement bubble sort
+vector<double> bubbleSort(vector<double> arr)
+{
+   int n = arr.size();
+    int i, j;
+    for (i = 0; i < n-1; i++)    
+     
+    // Last i elements are already in place
+    for (j = 0; j < n-i-1; j++)
+        if (arr[j] > arr[j+1])
+            swap(&arr[j], &arr[j+1]);
+   
+   return arr;
+}
+
+
 // Function to calculate sjf preemptive method.
 void calculate_sjf_preemptive(vector<double> burst)
 {
-   sort(burst.begin(), burst.end());
+   burst = bubbleSort(burst);
    double waitingTime = 0, totalTime = 0;
    int i;
    for (i = 0; i < burst.size() - 1; i++)
