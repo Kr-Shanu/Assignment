@@ -44,11 +44,11 @@ node* FindMin(node* root)
 
 
 // Function to search a delete a value from tree.
-struct node* Delete(struct node *root, int data) {
+struct node* delete(struct node *root, int data) {
 	if(root == NULL) return root; 
 	else if(data < root->data) root->left = Delete(root->left,data);
 	else if (data > root->data) root->right = Delete(root->right,data);
-	// Wohoo... I found you, Get ready to be deleted	
+	
 	else {
 		// Case 1:  No child
 		if(root->left == NULL && root->right == NULL) { 
@@ -109,5 +109,13 @@ int main()
     } while (value > 0);
     // Inorder(root);
     cout << "Sum of all leaf nodes are " << leaf_sum(root);
+
+   cout<<"Please enter the element to be deleted"<<endl;
+   int del;
+   cin>>del;
+   delete(root, del);
+	
+	
+	
     return 0;
 }
