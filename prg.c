@@ -1,130 +1,98 @@
-#include <stdio.h>
-#include <stdlib.h>
-struct node
-{
-    int data;
-    struct node *left;
-    struct node *right;
+/*Queue - Linked List implementation*/
+#include<stdio.h>
+#include<stdlib.h>
+struct Node {
+	int data;
+	struct Node* next;
 };
-struct node *getnode(int value)
-{
-    struct node *temp = (struct node*)malloc(sizeof(struct node));
-    temp->data = value;
-    temp->left = NULL;
-    temp->right = NULL;
-    return temp;
-}
-struct node *insert_bst(struct node *roots, int value)
-{
-    if (roots == NULL)
-    {
-        return getnode(value);
-    }
-    if (roots->data > value)
-    {
-        roots->left = insert_bst(roots->left, value);
-    }
-    else if (roots->data < value)
-    {
-        roots->right = insert_bst(roots->right, value);
-    }
-    return roots;
-}
+// Two glboal variables to store address of front and rear nodes. 
+struct Node* front = NULL;
+struct Node* rear = NULL;
 
-
-
-//Function to find minimum in a tree. 
-struct node* FindMin(struct node* root)
-{
-	while(root->left != NULL) root = root->left;
-	return root;
-}
-
-
-// Function to search a delete a value from tree.
-struct node* Delete(struct node *root, int data) {
-	if(root == NULL) return root; 
-	else if(data < root->data) root->left = Delete(root->left,data);
-	else if (data > root->data) root->right = Delete(root->right,data);
-	// Wohoo... I found you, Get ready to be deleted	
-	else {
-		// Case 1:  No child
-		if(root->left == NULL && root->right == NULL) { 
-			free(root);
-			root = NULL;
-		}
-		//Case 2: One child 
-		else if(root->left == NULL) {
-			struct node *temp = root;
-			root = root->right;
-			free(temp);
-		}
-		else if(root->right == NULL) {
-			struct node *temp = root;
-			root = root->left;
-			free(temp);
-		}
-		// case 3: 2 children
-		else { 
-			struct node *temp = FindMin(root->right);
-			root->data = temp->data;
-			root->right = Delete(root->right,temp->data);
-		}
+// To Enqueue an integer
+void Enqueue(int x) {
+	struct Node* temp = 
+		(struct Node*)malloc(sizeof(struct Node));
+	temp->data =x; 
+	temp->next = NULL;
+	if(front == NULL && rear == NULL){
+		front = rear = temp;
+		return;
 	}
-	return root;
+	rear->next = temp;
+	rear = temp;
 }
 
-
-//Function to visit nodes in Inorder
-void Inorder(struct node *root) {
-	if(root == NULL) return;
- 
-	Inorder(root->left);       //Visit left subtree
-	printf("%d ",root->data);  //Print data
-	Inorder(root->right);      // Visit right subtree
+// To Dequeue an integer.
+void Dequeue() {
+	struct Node* temp = front;
+	if(front == NULL) {
+		printf("Queue is Empty\n");
+		return;
+	}
+	if(front == rear) {
+		front = rear = NULL;
+	}
+	else {
+		front = front->next;
+	}
+	free(temp);
 }
 
+int Front() {
+	if(front == NULL) {
+		printf("Queue is empty\n");
+		return 0;
+	}
+	return front->data;
+}
 
-
-
-int leaf_sum(struct node *roots)
+int last()
 {
-    if (roots == NULL)
+    struct Node* temp = front;
+    while(temp->next!=NULL)
     {
-        return 0;
+        temp = temp->next;
     }
-    if (roots->left == NULL && roots->right == NULL)
+    return temp->data;
+}
+
+void displaySumOfDigits(int num)
+{
+    int temp = num, sum = 0;
+    while(temp>0)
     {
-        return roots->data;
+        int temp2 = temp%10;
+        temp = temp/10;
+        sum = sum + temp2;
     }
-    return (leaf_sum(roots->left) + leaf_sum(roots->right));
+    printf("The value of the sum of digit = %d",sum);
+    printf("\n");
 }
 
 
-int main()
-{
-    struct node *root = (struct node*)malloc(sizeof(struct node));
-    root = NULL;
-    int value;
-    printf(" Enter a value and press enter and to stop the program enter a value smaller than 0\n");
-    do
-    {
-        scanf("%d",&value);
-        if (value > 0)
-        {
-            root = insert_bst(root, value);
-        }
-    } while (value > 0);
-    // Inorder(root);
-    printf("Sum of all leaf nodes are %d \n", leaf_sum(root));
+void Print() {
+	struct Node* temp = front;
+	while(temp != NULL) {
+		printf("%d ",temp->data);
+		temp = temp->next;
+	}
+	printf("\n");
+}
 
-   printf("Please enter the element to be deleted: ");
-   int del;
-   scanf("%d",&del);
+int main(){
+	/* Drive code to test the implementation. */
+	// Printing elements in Queue after each Enqueue or Dequeue 
+	Enqueue(2); Print(); 
+	Enqueue(4); Print();
+	Enqueue(6); Print();
+	Dequeue(); Print();
+	Enqueue(8); Print();
 
-    Delete(root, del);
-    Inorder(root);
-    
-	
-    return 0;
+    int frontValue = Front();
+    int lastValue = last();
+
+    displaySumOfDigits(frontValue*lastValue);
+
+
 }
